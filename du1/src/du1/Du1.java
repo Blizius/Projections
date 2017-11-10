@@ -10,6 +10,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import static java.lang.Math.PI;
 import static java.lang.Math.abs;
+import static java.lang.Math.log;
+import static java.lang.Math.sin;
+import static java.lang.Math.tan;
 import java.util.Scanner;
 
 
@@ -35,14 +38,17 @@ public class Du1 {
                 + "B pro Braunovo nebo M pro Mercatorovo zobrazení.");
         char projection = readChar();
         System.out.println();
-        if (projection == 'A')
-        {
-            Marin(R);            
-        }
-                
-                
-              
         
+        if (projection == 'A')
+            Marin(R);            
+        else if (projection == 'L')
+            Lambert(R);    
+        else if (projection == 'B')
+            Braun(R);        
+        else if (projection == 'M')
+            Mercator(R);      
+        else
+            System.out.println("Tady někdo neumí číst zadání. Zkus to znovu a podívej se pořádně.");
               
     
         // TODO code application logic here
@@ -52,25 +58,115 @@ public class Du1 {
     {        
         int v;
         int u;
-        double x = 0;
-        double y = 0;
-        System.out.println("Vzdálenosti poledníků od středu papíru v cm:");
+        double x;
+        double y;
+        System.out.println("Vzdálenosti poledníků od středu papíru v cm (max 1 m):");
         for (v = -180; v < 181; v += 10)
         {
-            double rad = v*(PI/180);
-            x = abs(r*rad);
-            System.out.format("%.1f\n", x);
+            double rad = abs (v)*(PI/180);
+            x = r*rad;
+            if (x < 100.0)
+                System.out.format("%.1f\n", x);
+            else                           
+                System.out.format("-\n");
         }
         
-        System.out.println("Vzdálenosti rovnoběžek od středu papíru v cm:");
+        System.out.println("Vzdálenosti rovnoběžek od středu papíru v cm (max 1 m):");
         for (u = -90; u < 91; u += 10)
         {
-            double rad = u*(PI/180);
-            x = abs(r*rad);
-            System.out.format("%.1f\n", x);
+            double rad = abs(u)*(PI/180);
+            y = r*rad;
+            if (y < 100.0)
+                System.out.format("%.1f\n", y);
+            else                           
+                System.out.format("-\n");
+        }                 
+    }
+    
+    public static void Lambert (double r)
+    {
+        int v;
+        int u;
+        double x;
+        double y;
+        System.out.println("Vzdálenosti poledníků od středu papíru v cm (max 1 m):");
+        for (v = -180; v < 181; v += 10)
+        {
+            double rad = abs(v)*(PI/180);
+            x = r*rad;
+            if (x < 100.0)
+                System.out.format("%.1f\n", x);
+            else                           
+                System.out.format("-\n");
         }
-               
-             
+        
+        System.out.println("Vzdálenosti rovnoběžek od středu papíru v cm (max 1 m):");
+        for (u = -90; u < 91; u += 10)
+        {
+            double rad = abs(u)*(PI/180);
+            y = r*sin(rad);
+            if (y < 100.0)
+                System.out.format("%.1f\n", y);
+            else                           
+                System.out.format("-\n");
+        }
+    }
+    
+    public static void Braun (double r)
+    {
+        int v;
+        int u;
+        double x;
+        double y;
+        System.out.println("Vzdálenosti poledníků od středu papíru v cm (max 1 m):");
+        for (v = -180; v < 181; v += 10)
+        {
+            double rad = abs(v)*(PI/180);
+            x = r*rad;
+            if (x < 100.0)
+                System.out.format("%.1f\n", x);
+            else                           
+                System.out.format("-\n");
+        }
+        
+        System.out.println("Vzdálenosti rovnoběžek od středu papíru v cm (max 1 m):");
+        for (u = -90; u < 91; u += 10)
+        {
+            double rad = abs(u)*(PI/180);
+            y = 2*r*tan(rad/2);
+            if (y < 100.0)
+                System.out.format("%.1f\n", y);
+            else                           
+                System.out.format("-\n");
+        }
+    }
+     public static void Mercator (double r)
+    {
+        int v;
+        int u;
+        double x;
+        double y;
+        System.out.println("Vzdálenosti poledníků od středu papíru v cm (max 1 m):");
+        for (v = -180; v < 181; v += 10)
+        {
+            double rad = abs(v)*(PI/180);
+            x = r*rad;
+            if (x < 100.0)
+                System.out.format("%.1f\n", x);
+            else                           
+                System.out.format("-\n"); 
+        }
+        
+        System.out.println("Vzdálenosti rovnoběžek od středu papíru v cm (max 1 m):");
+        for (u = -90; u < 91; u += 10)
+        {
+            double rad = (90 - abs(u))*(PI/180);
+            y = r*log(1/tan(rad/2));
+            if (y < 100.0)
+                System.out.format("%.1f\n", y);
+            else
+                System.out.format("-\n");
+        }
     }
     
     public static int readInt() throws IOException{
