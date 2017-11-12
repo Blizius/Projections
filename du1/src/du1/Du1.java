@@ -13,6 +13,8 @@ import static java.lang.Math.abs;
 import static java.lang.Math.log;
 import static java.lang.Math.sin;
 import static java.lang.Math.tan;
+import static java.lang.Math.toRadians;
+
 import java.util.Scanner;
 
 
@@ -27,259 +29,211 @@ public class Du1 {
      * @throws java.io.IOException
      */
 //    Hlavni funkce. Výběr měřítka a poloměru planety (Země) a jeho převedení do měřítka.
-//    Výběr zobrazení. Volání příslušných funkcí.
+//    Výběr zobrazení. Volání příslušných funkcí. Vyřešení nekorektních vstupů.
     public static void main(String[] args) throws IOException {
               
         System.out.println("Měřítko (celočíselné) je 1 : ");
         int scale = readInt();
+        if(scale <= 0)
+        {
+            System.out.println("Měřítko nemůže být záporné nebo 0. Jak vůbec můžeš"
+                    + " studovat tuhle školu?");
+            System.exit(0);
+        }
         
-        double R;
+        double rMap;
         System.out.println("Zadejte poloměr planety (Země). Pro referenční poloměr"
                 + " Země používaný v kartogradii zadejte 0.");
         double r = readDouble();
-        if (r == 0)
+        if(r < 0)
         {
-            R = 637111000/scale;   
-        }           
-        else
-        {
-            R = r*100000/scale;
-        }          
+            System.out.println("Poloměr planety nemůže být záporný. Jak ses "
+                    + "vůbec mohl dostat i přes základku?");
+            System.exit(0);        
+        }
+        if (r == 0)        
+            rMap = 637111000/scale;                   
+        else        
+            rMap = r*100000/scale;
+                  
         
         System.out.println("Vyberte zobrazení vepsáním L pro Lambertovo, A pro Marinovo, "
                 + "B pro Braunovo nebo M pro Mercatorovo zobrazení.");
         char projection = readChar();
-        System.out.println();
+        System.out.println();       
         
-        if (projection == 'A')
-            Marin(R);            
+        if (projection == 'A')        
+            Marin(rMap);                          
         else if (projection == 'L')
-            Lambert(R);    
+            Lambert(rMap);    
         else if (projection == 'B')
-            Braun(R);        
+            Braun(rMap);        
         else if (projection == 'M')
-            Mercator(R);      
+            Mercator(rMap);      
         else
-            System.out.println("Tady někdo neumí číst zadání. Zkus to znovu a podívej se pořádně.");
-              
-    
+            System.out.println("Tady někdo neumí číst zadání. Zkus to znovu a podívej se pořádně.");   
         // TODO code application logic here
     }
+    
+//  Podmínka pro výpis pomlček nad 1 m.
+    public static void PaperEdge(double coord)
+    {
+        if (abs(coord) <= 100.0)
+            System.out.format("%.1f\n", coord);
+        else                           
+            System.out.format("-\n");
+    }
+    
+//  Funkce pro zadání souřadnic bodu, který chce uživatel zobrazit.  
+    public static double [] point() throws IOException
+    {
+        double []vu;
+        vu = new double [2];
+        System.out.println("Pro ukončení programu zadejte v obou následujících"
+                    + " vstupech 0.");
+        System.out.println("Zadejte zeměpisnou délku hledaného bodu "
+                    + "ve stupních (s desetinou čárkou, ne na minuty a vteřiny).");
+        vu[0] = readDouble();
+        
+        System.out.println("Zadejte zeměpisnou šířku hledaného bodu "
+                    + "ve stupních (s desetinou čárkou, ne na minuty a vteřiny).");
+        vu[1] = readDouble();
+        
+        return vu;
+    }
+    
 //  Funkce pro výpočet zobrazení. Všechny na stejném principu. Do všech vstupuje
 //  poloměr převedený na dané měřítko a nic nevystupuje, pouze se vypisuje.
-//  Uvnitr vytvořeny proměnné pro zem. délku a šířku ve skutečnosti a na papíře.
+//  Uvnitř vytvořeny proměnné pro zem. délku a šířku ve skutečnosti a na papíře.
 //  Použití cyklu pro projití každé rovnoběžky a poledníku v daném rozsahu.
-//  Podmínka pro vzdálenosti větší než 1 m. 
+//  Podmínka pro vzdálenosti větší než 1 m.
+//  Poté cyklus pro opětovné počítání souřadnic zadaného bodu.    
     public static void Marin(double r) throws IOException
     {        
-        double v;
-        double u;
         double x;
         double y;
         System.out.println("Vzdálenosti poledníků od středu papíru v cm (max 1 m):");
-        for (v = -180; v < 181; v += 10)
+        for (double v = -180; v < 181; v += 10)
         {
-            double rad = abs(v)*(PI/180);
-            x = r*rad;
-            if (x <= 100.0)
-                System.out.format("%.1f\n", x);
-            else                           
-                System.out.format("-\n");
+            x = r*toRadians(v);
+            PaperEdge(x);
         }
         
         System.out.println("Vzdálenosti rovnoběžek od středu papíru v cm (max 1 m):");
-        for (u = -90; u < 91; u += 10)
-        {
-            double rad = abs(u)*(PI/180);
-            y = r*rad;
-            if (y <= 100.0)
-                System.out.format("%.1f\n", y);
-            else                           
-                System.out.format("-\n");
+        for (double u = -90; u < 91; u += 10)
+        {            
+            y = r*toRadians(u);
+            PaperEdge(y);
         }      
         
          while (r != 0)
         {
-            System.out.println("Pro ukončení programu zadejte v obou následujících"
-                    + " vstupech 0.");
-            System.out.println("Zadejte zeměpisnou délku hledaného bodu "
-                    + "ve stupních (s desetinou čárkou, ne na minuty a vteřiny).");
-            v = readDouble();
-            System.out.println("Zadejte zeměpisnou šířku hledaného bodu "
-                    + "ve stupních (s desetinou čárkou, ne na minuty a vteřiny).");
-            u = readDouble();
-            if (v == 0 && u == 0)
+            double [] vu = point();
+            if (vu[0] == 0 && vu[1] == 0)
                 break;
             else
-            {
-                double xRad = v*(PI/180);
-                x = r*xRad;
-                double yRad = u*(PI/180);
-                y = r*yRad;
+            {                
+                x = r*toRadians(vu[0]);                
+                y = r*toRadians(vu[1]);
                 System.out.format("Souřadnice [x ; y] bodu (v cm) na papíře jsou:\n"
                         + "[%.1f ; %.1f].\n", x, y);
             }
         }
-    }
+    }   
     
     public static void Lambert (double r) throws IOException
     {
-        double v;
-        double u;
         double x;
         double y;
         System.out.println("Vzdálenosti poledníků od středu papíru v cm (max 1 m):");
-        for (v = -180; v < 181; v += 10)
+        for (double v = -180; v < 181; v += 10)
         {
-            double rad = abs(v)*(PI/180);
-            x = r*rad;
-            if (x <= 100.0)
-                System.out.format("%.1f\n", x);
-            else                           
-                System.out.format("-\n");
+            x = r*toRadians(v);
+            PaperEdge(x);
         }
         
         System.out.println("Vzdálenosti rovnoběžek od středu papíru v cm (max 1 m):");
-        for (u = -90; u < 91; u += 10)
-        {
-            double rad = abs(u)*(PI/180);
-            y = r*sin(rad);
-            if (y <= 100.0)
-                System.out.format("%.1f\n", y);
-            else                           
-                System.out.format("-\n");
-        }
+        for (double u = -90; u < 91; u += 10)
+        {            
+            y = r*sin(toRadians(u));
+            PaperEdge(y);
+        }      
         
-        while (r != 0)
+         while (r != 0)
         {
-            System.out.println("Pro ukončení programu zadejte v obou následujících"
-                    + " vstupech 0.");
-            System.out.println("Zadejte zeměpisnou délku hledaného bodu "
-                    + "ve stupních (s desetinou čárkou, ne na minuty a vteřiny).");
-            v = readDouble();
-            System.out.println("Zadejte zeměpisnou šířku hledaného bodu "
-                    + "ve stupních (s desetinou čárkou, ne na minuty a vteřiny).");
-            u = readDouble();
-            if (v == 0 && u == 0)
+            double [] vu = point();
+            if (vu[0] == 0 && vu[1] == 0)
                 break;
             else
-            {
-                double xRad = v*(PI/180);
-                x = r*xRad;
-                double yRad = u*(PI/180);
-                y = r*sin(yRad);
+            {                
+                x = r*toRadians(vu[0]);                
+                y = r*sin(toRadians(vu[1]));
                 System.out.format("Souřadnice [x ; y] bodu (v cm) na papíře jsou:\n"
                         + "[%.1f ; %.1f].\n", x, y);
             }
-            
-        }
-        
-        
-        
-        
+        }        
     }
     
     public static void Braun (double r) throws IOException
     {
-        double v;
-        double u;
-        double x;
+         double x;
         double y;
         System.out.println("Vzdálenosti poledníků od středu papíru v cm (max 1 m):");
-        for (v = -180; v < 181; v += 10)
+        for (double v = -180; v < 181; v += 10)
         {
-            double rad = abs(v)*(PI/180);
-            x = r*rad;
-            if (x <= 100.0)
-                System.out.format("%.1f\n", x);
-            else                           
-                System.out.format("-\n");
+            x = r*toRadians(v);
+            PaperEdge(x);
         }
         
         System.out.println("Vzdálenosti rovnoběžek od středu papíru v cm (max 1 m):");
-        for (u = -90; u < 91; u += 10)
-        {
-            double rad = abs(u)*(PI/180);
-            y = 2*r*tan(rad/2);
-            if (y <= 100.0)
-                System.out.format("%.1f\n", y);
-            else                           
-                System.out.format("-\n");
-        }
+        for (double u = -90; u < 91; u += 10)
+        {            
+            y = 2*r*tan(toRadians(u)/2);
+            PaperEdge(y);
+        }      
         
-        while (r != 0)
+         while (r != 0)
         {
-            System.out.println("Pro ukončení programu zadejte v obou následujících"
-                    + " vstupech 0.");
-            System.out.println("Zadejte zeměpisnou délku hledaného bodu "
-                    + "ve stupních (s desetinou čárkou, ne na minuty a vteřiny).");
-            v = readDouble();
-            System.out.println("Zadejte zeměpisnou šířku hledaného bodu "
-                    + "ve stupních (s desetinou čárkou, ne na minuty a vteřiny).");
-            u = readDouble();
-            if (v == 0 && u == 0)
+            double [] vu = point();
+            if (vu[0] == 0 && vu[1] == 0)
                 break;
             else
-            {
-                double xRad = v*(PI/180);
-                x = r*xRad;
-                double yRad = u*(PI/180);
-                y = 2*r*tan(yRad/2);
+            {                
+                x = r*toRadians(vu[0]);                
+                y = 2*r*tan(toRadians(vu[1])/2);
                 System.out.format("Souřadnice [x ; y] bodu (v cm) na papíře jsou:\n"
                         + "[%.1f ; %.1f].\n", x, y);
             }
-        }    
+        }  
     }
+    
      public static void Mercator (double r) throws IOException
     {
-        double v;
-        double u;
-        double x;
+         double x;
         double y;
         System.out.println("Vzdálenosti poledníků od středu papíru v cm (max 1 m):");
-        for (v = -180; v < 181; v += 10)
+        for (double v = -180; v < 181; v += 10)
         {
-            double rad = abs(v)*(PI/180);
-            x = r*rad;
-            if (x <= 100.0)
-                System.out.format("%.1f\n", x);
-            else                           
-                System.out.format("-\n"); 
+            x = r*toRadians(v);
+            PaperEdge(x);
         }
         
         System.out.println("Vzdálenosti rovnoběžek od středu papíru v cm (max 1 m):");
-        for (u = -90; u < 91; u += 10)
-        {
-            double rad = (90 - abs(u))*(PI/180);
-            y = r*log(1/tan(rad/2));
-            if (y <= 100.0)
-                System.out.format("%.1f\n", y);
-            else
-                System.out.format("-\n");
-        }
+        for (double u = -90; u < 91; u += 10)
+        {            
+            y = r*log(1/tan(toRadians(90-abs(u))/2));
+            PaperEdge(y);
+        }      
         
-        while (r != 0)
+         while (r != 0)
         {
-            System.out.println("Pro ukončení programu zadejte v obou následujících"
-                    + " vstupech 0.");
-            System.out.println("Zadejte zeměpisnou délku hledaného bodu "
-                    + "ve stupních (s desetinou čárkou, ne na minuty a vteřiny).");
-            v = readDouble();
-            System.out.println("Zadejte zeměpisnou šířku hledaného bodu "
-                    + "ve stupních (s desetinou čárkou, ne na minuty a vteřiny).");
-            u = readDouble();
-            if (v == 0 && u == 0)
+            double [] vu = point();
+            if (vu[0] == 0 && vu[1] == 0)
                 break;
             else
-            {
-                double xRad = v*(PI/180);
-                x = r*xRad;
-                double yRad = (90 - abs(u))*(PI/180);
-                y = r*log(1/tan(yRad/2));
-                if (u < 0)
-                {
-                    y = -y;
-                }                    
+            {                
+                x = r*toRadians(vu[0]);                
+                y = r*log(1/tan(toRadians(90-abs(vu[1]))/2));
                 System.out.format("Souřadnice [x ; y] bodu (v cm) na papíře jsou:\n"
                         + "[%.1f ; %.1f].\n", x, y);
             }
