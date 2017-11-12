@@ -33,11 +33,11 @@ public class Du1 {
     public static void main(String[] args) throws IOException {
               
         System.out.println("Měřítko (celočíselné) je 1 : ");
-        int scale = readInt();
-        if(scale <= 0)
+        double scale = readDouble();
+        if(scale <= 0 || ((int)scale - scale) != 0)
         {
-            System.out.println("Měřítko nemůže být záporné nebo 0. Jak vůbec můžeš"
-                    + " studovat tuhle školu?");
+            System.out.println("Už jsi někdy viděl neceločíselné, záporné nebo"
+                    + " nulové měřítko?. Jak vůbec můžeš studovat tuhle školu?");
             System.exit(0);
         }
         
@@ -222,6 +222,10 @@ public class Du1 {
         for (double u = -90; u < 91; u += 10)
         {            
             y = r*log(1/tan(toRadians(90-abs(u))/2));
+            if (u < 0)
+            {
+               y = -y; 
+            }                
             PaperEdge(y);
         }      
         
