@@ -26,13 +26,15 @@ public class Du1 {
      * @param args the command line arguments
      * @throws java.io.IOException
      */
-//    Hlavni funkce. Výběr měřítka a definování poloměru Země již v daném měřítku.
+//    Hlavni funkce. Výběr měřítka a poloměru planety (Země) a jeho převedení do měřítka.
 //    Výběr zobrazení. Volání příslušných funkcí.
     public static void main(String[] args) throws IOException {
               
-        System.out.println("Měřítko je 1 : ");
+        System.out.println("Měřítko (celočíselné) je 1 : ");
         int scale = readInt();
-        final double R = 637111000/scale;
+        System.out.println("Poloměr planety v km je:");
+        double r = readDouble();
+        final double R = r*100000/scale;
         
         System.out.println("Vyberte zobrazení vepsáním L pro Lambertovo, A pro Marinovo, "
                 + "B pro Braunovo nebo M pro Mercatorovo zobrazení.");
@@ -53,7 +55,11 @@ public class Du1 {
     
         // TODO code application logic here
     }
-    
+//  Funkce pro výpočet zobrazení. Všechny na stejném principu. Do všech vstupuje
+//  poloměr převedený na dané měřítko a nic nevystupuje, pouze se vypisuje.
+//  Uvnitr vytvořeny proměnné pro zem. délku a šířku ve skutečnosti a na papíře.
+//  Použití cyklu pro projití každé rovnoběžky a poledníku v daném rozsahu.
+//  Podmínka pro vzdálenosti větší než 1 m. 
     public static void Marin(double r)
     {        
         int v;
@@ -63,9 +69,9 @@ public class Du1 {
         System.out.println("Vzdálenosti poledníků od středu papíru v cm (max 1 m):");
         for (v = -180; v < 181; v += 10)
         {
-            double rad = abs (v)*(PI/180);
+            double rad = abs(v)*(PI/180);
             x = r*rad;
-            if (x < 100.0)
+            if (x <= 100.0)
                 System.out.format("%.1f\n", x);
             else                           
                 System.out.format("-\n");
@@ -76,7 +82,7 @@ public class Du1 {
         {
             double rad = abs(u)*(PI/180);
             y = r*rad;
-            if (y < 100.0)
+            if (y <= 100.0)
                 System.out.format("%.1f\n", y);
             else                           
                 System.out.format("-\n");
@@ -94,7 +100,7 @@ public class Du1 {
         {
             double rad = abs(v)*(PI/180);
             x = r*rad;
-            if (x < 100.0)
+            if (x <= 100.0)
                 System.out.format("%.1f\n", x);
             else                           
                 System.out.format("-\n");
@@ -105,7 +111,7 @@ public class Du1 {
         {
             double rad = abs(u)*(PI/180);
             y = r*sin(rad);
-            if (y < 100.0)
+            if (y <= 100.0)
                 System.out.format("%.1f\n", y);
             else                           
                 System.out.format("-\n");
@@ -123,7 +129,7 @@ public class Du1 {
         {
             double rad = abs(v)*(PI/180);
             x = r*rad;
-            if (x < 100.0)
+            if (x <= 100.0)
                 System.out.format("%.1f\n", x);
             else                           
                 System.out.format("-\n");
@@ -134,7 +140,7 @@ public class Du1 {
         {
             double rad = abs(u)*(PI/180);
             y = 2*r*tan(rad/2);
-            if (y < 100.0)
+            if (y <= 100.0)
                 System.out.format("%.1f\n", y);
             else                           
                 System.out.format("-\n");
@@ -151,7 +157,7 @@ public class Du1 {
         {
             double rad = abs(v)*(PI/180);
             x = r*rad;
-            if (x < 100.0)
+            if (x <= 100.0)
                 System.out.format("%.1f\n", x);
             else                           
                 System.out.format("-\n"); 
@@ -162,7 +168,7 @@ public class Du1 {
         {
             double rad = (90 - abs(u))*(PI/180);
             y = r*log(1/tan(rad/2));
-            if (y < 100.0)
+            if (y <= 100.0)
                 System.out.format("%.1f\n", y);
             else
                 System.out.format("-\n");
