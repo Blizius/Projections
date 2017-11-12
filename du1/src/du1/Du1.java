@@ -234,6 +234,9 @@ public class Du1 {
             double [] vu = point();
             if (vu[0] == 0 && vu[1] == 0)
                 break;
+            else if (abs(vu[1]) == 90)
+                System.out.format("Bod se zem. šířkou +- 90° nelze zobrazit,"
+                        + " nachází se nekonečně daleko od středu papíru.\n\n");
             else
             {                
                 x = r*toRadians(vu[0]);                
