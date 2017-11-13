@@ -29,7 +29,7 @@ public class Du1 {
      * @throws java.io.IOException
      */
 //    Hlavni funkce. Výběr měřítka a poloměru planety (Země) a jeho převedení do měřítka.
-//    Výběr zobrazení. Volání příslušných funkcí. Vyřešení nekorektních vstupů.
+//    Výběr zobrazení. Volání příslušných funkcí. Všude ošetření nekorektních vstupů.
     public static void main(String[] args) throws IOException {
               
         System.out.println("Měřítko (celočíselné) je 1 : ");
@@ -51,10 +51,14 @@ public class Du1 {
                     + "vůbec mohl dostat i přes základku?");
             System.exit(0);        
         }
-        if (r == 0)        
-            rMap = 637111000/scale;                   
+        if (r == 0)
+        {
+            rMap = 637111000/scale; 
+        }
         else        
+        {
             rMap = r*100000/scale;
+        }
                   
         
         System.out.println("Vyberte zobrazení vepsáním L pro Lambertovo, A pro Marinovo, "
@@ -62,26 +66,39 @@ public class Du1 {
         char projection = readChar();
         System.out.println();       
         
-        if (projection == 'A')        
-            Marin(rMap);                          
+        if (projection == 'A')
+        {
+            Marin(rMap);
+        }
         else if (projection == 'L')
-            Lambert(rMap);    
+        {
+            Lambert(rMap);
+        }
         else if (projection == 'B')
-            Braun(rMap);        
+        {
+            Braun(rMap);
+        }
         else if (projection == 'M')
-            Mercator(rMap);      
+        {
+            Mercator(rMap);  
+        }
         else
-            System.out.println("Tady někdo neumí číst zadání. Zkus to znovu a podívej se pořádně.");   
-        // TODO code application logic here
+        {
+            System.out.println("Tady někdo neumí číst zadání. Zkus to znovu a podívej se pořádně.");  
+        }
     }
     
 //  Podmínka pro výpis pomlček nad 1 m.
     public static void PaperEdge(double coord)
     {
         if (abs(coord) <= 100.0)
+        {
             System.out.format("%.1f\n", coord);
-        else                           
+        }
+        else              
+        {
             System.out.format("-\n");
+        }
     }
     
 //  Funkce pro zadání souřadnic bodu, který chce uživatel zobrazit.  
@@ -92,12 +109,24 @@ public class Du1 {
         System.out.println("Pro ukončení programu zadejte v obou následujících"
                     + " vstupech 0.");
         System.out.println("Zadejte zeměpisnou délku hledaného bodu "
-                    + "ve stupních (s desetinou čárkou, ne na minuty a vteřiny).");
+                    + "ve stupních (s desetinou čárkou, ne na minuty a vteřiny)."
+                    + " Od -180° do 180°.");
         vu[0] = readDouble();
+        if (abs(vu[0]) > 180)
+        {
+            System.out.println("Už chodíš dokola. Zadávej pouze výše definované vstupy.");
+            System.exit(0);
+        }
         
         System.out.println("Zadejte zeměpisnou šířku hledaného bodu "
-                    + "ve stupních (s desetinou čárkou, ne na minuty a vteřiny).");
+                    + "ve stupních (s desetinou čárkou, ne na minuty a vteřiny)."
+                    + " Od -90° do 90°.");
         vu[1] = readDouble();
+        if (abs(vu[1]) > 90)
+        {
+            System.out.println("Už chodíš dokola. Zadávej pouze výše definované vstupy.");
+            System.exit(0);
+        }
         
         return vu;
     }
@@ -130,7 +159,9 @@ public class Du1 {
         {
             double [] vu = point();
             if (vu[0] == 0 && vu[1] == 0)
+            {
                 break;
+            }
             else
             {                
                 x = r*toRadians(vu[0]);                
@@ -163,7 +194,9 @@ public class Du1 {
         {
             double [] vu = point();
             if (vu[0] == 0 && vu[1] == 0)
+            {
                 break;
+            }
             else
             {                
                 x = r*toRadians(vu[0]);                
@@ -176,7 +209,7 @@ public class Du1 {
     
     public static void Braun (double r) throws IOException
     {
-         double x;
+        double x;
         double y;
         System.out.println("Vzdálenosti poledníků od středu papíru v cm (max 1 m):");
         for (double v = -180; v < 181; v += 10)
@@ -196,7 +229,9 @@ public class Du1 {
         {
             double [] vu = point();
             if (vu[0] == 0 && vu[1] == 0)
+            {
                 break;
+            }
             else
             {                
                 x = r*toRadians(vu[0]);                
@@ -209,7 +244,7 @@ public class Du1 {
     
      public static void Mercator (double r) throws IOException
     {
-         double x;
+        double x;
         double y;
         System.out.println("Vzdálenosti poledníků od středu papíru v cm (max 1 m):");
         for (double v = -180; v < 181; v += 10)
@@ -233,10 +268,14 @@ public class Du1 {
         {
             double [] vu = point();
             if (vu[0] == 0 && vu[1] == 0)
+            {
                 break;
+            }
             else if (abs(vu[1]) == 90)
+            {
                 System.out.format("Bod se zem. šířkou +- 90° nelze zobrazit,"
                         + " nachází se nekonečně daleko od středu papíru.\n\n");
+            }
             else
             {                
                 x = r*toRadians(vu[0]);                
