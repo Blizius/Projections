@@ -43,7 +43,7 @@ public class Du1 {
         
         double rMap;
         System.out.println("Zadejte poloměr planety (Země). Pro referenční poloměr"
-                + " Země používaný v kartogradii zadejte 0.");
+                + " Země používaný v kartografii zadejte 0.");
         double r = readDouble();
         if(r < 0)
         {
@@ -155,7 +155,7 @@ public class Du1 {
             PaperEdge(y);
         }      
         
-         while (r != 0)
+         while (true)
         {
             double [] vu = point();
             if (vu[0] == 0 && vu[1] == 0)
@@ -190,7 +190,7 @@ public class Du1 {
             PaperEdge(y);
         }      
         
-         while (r != 0)
+         while (true)
         {
             double [] vu = point();
             if (vu[0] == 0 && vu[1] == 0)
@@ -225,7 +225,7 @@ public class Du1 {
             PaperEdge(y);
         }      
         
-         while (r != 0)
+         while (true)
         {
             double [] vu = point();
             if (vu[0] == 0 && vu[1] == 0)
@@ -264,7 +264,7 @@ public class Du1 {
             PaperEdge(y);
         }      
         
-         while (r != 0)
+         while (true)
         {
             double [] vu = point();
             if (vu[0] == 0 && vu[1] == 0)
